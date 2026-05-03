@@ -1,0 +1,53 @@
+body { font-family: 'Inter', sans-serif; }
+h1, h2, h3, .font-headline { font-family: 'Space Grotesk', sans-serif; }
+
+.glass {
+    background: rgba(50, 25, 78, 0.4);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(155, 168, 255, 0.2);
+}
+
+.glass-heavy {
+    background: rgba(50, 25, 78, 0.6);
+    backdrop-filter: blur(40px);
+    border: 1.5px solid rgba(233, 102, 255, 0.3);
+}
+
+.glow-blob {
+    filter: blur(120px);
+    z-index: -1;
+    position: absolute;
+    border-radius: 50%;
+}
+
+.material-icon {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(2rem); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse-slow {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.5; }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom scrollbar handling for code windows */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}

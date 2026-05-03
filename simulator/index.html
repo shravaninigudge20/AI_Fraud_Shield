@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>I-Fraud Shield | Transaction Simulator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#8999ff",
+                        "surface-dim": "#16052a",
+                        "primary-fixed-dim": "#778aff",
+                        "on-tertiary-container": "#004d57",
+                        "on-primary-container": "#001470",
+                        "on-tertiary-fixed": "#003840",
+                        "surface": "#16052a",
+                        "error-container": "#a70138",
+                        "secondary-container": "#a100bd",
+                        "background": "#16052a",
+                        "surface-container": "#240e3b",
+                        "surface-bright": "#391e58",
+                        "error": "#ff6e84",
+                        "tertiary-dim": "#00d4ec",
+                        "on-primary-fixed-variant": "#001a88",
+                        "inverse-primary": "#2949ef",
+                        "secondary-fixed-dim": "#f7a8ff",
+                        "surface-container-high": "#2b1345",
+                        "surface-tint": "#9ba8ff",
+                        "primary": "#9ba8ff",
+                        "surface-container-lowest": "#000000",
+                        "tertiary": "#81ecff",
+                        "on-primary-fixed": "#000000",
+                        "tertiary-fixed": "#00e3fd",
+                        "surface-container-low": "#1c0832",
+                        "surface-variant": "#32194e",
+                        "on-tertiary-fixed-variant": "#005762",
+                        "on-secondary-container": "#fff5fa",
+                        "on-primary": "#001c8e",
+                        "primary-dim": "#4963ff",
+                        "outline": "#826d98",
+                        "on-secondary-fixed-variant": "#8b00a3",
+                        "secondary": "#e966ff",
+                        "on-secondary-fixed": "#5d006e",
+                        "on-error-container": "#ffb2b9",
+                        "error-dim": "#d73357",
+                        "secondary-dim": "#c500e6",
+                        "tertiary-fixed-dim": "#00d4ec",
+                        "tertiary-container": "#00e3fd",
+                        "on-secondary": "#3c0048",
+                        "primary-container": "#8999ff",
+                        "outline-variant": "#524067",
+                        "on-error": "#490013",
+                        "secondary-fixed": "#fbbdff",
+                        "inverse-surface": "#fff7ff",
+                        "on-surface": "#f1dfff",
+                        "on-tertiary": "#005762",
+                        "inverse-on-surface": "#604d75",
+                        "on-background": "#f1dfff",
+                        "on-surface-variant": "#b9a2d0",
+                        "surface-container-highest": "#32194e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #16052a;
+            color: #f1dfff;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(50, 25, 78, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(155, 168, 255, 0.1);
+        }
+        .luminous-border {
+            border: 1.5px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, #9ba8ff, #e966ff);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #e966ff;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(233, 102, 255, 0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-20 bg-[#16052a]/60 backdrop-blur-xl border-b border-[#9ba8ff]/20 shadow-[0_0_15px_rgba(155,168,255,0.2)]">
+<div class="text-2xl font-bold bg-gradient-to-r from-[#9ba8ff] to-[#e966ff] bg-clip-text text-transparent font-['Space_Grotesk'] tracking-tight">
+            I-Fraud Shield
+        </div>
+<nav class="hidden md:flex gap-6 items-center font-headline text-sm tracking-wider uppercase">
+<a class="text-[#9ba8ff]/70 hover:text-[#e966ff] transition-colors duration-300 hover:scale-105 active:scale-95 transition-transform" href="/dashboard/">Dashboard</a>
+<a class="text-[#9ba8ff]/70 hover:text-[#e966ff] transition-colors duration-300 hover:scale-105 active:scale-95 transition-transform" href="/dashboard/#analytics">Analytics</a>
+<a class="text-[#9ba8ff]/70 hover:text-[#e966ff] transition-colors duration-300 hover:scale-105 active:scale-95 transition-transform" href="/dashboard/#history">History</a>
+</nav>
+<button id="wallet-btn" class="bg-gradient-to-r from-primary-dim to-secondary-dim text-on-primary-fixed px-6 py-2 rounded-xl font-bold font-headline hover:scale-105 active:scale-95 transition-transform shadow-[0_0_20px_rgba(155,168,255,0.3)]">
+            Connect Wallet
+        </button>
+</nav>
+<div class="flex flex-1 pt-20">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col h-[calc(100vh-5rem)] w-64 fixed left-0 top-20 bg-[#16052a] border-r border-white/5 bg-gradient-to-b from-[#16052a] to-[#1a0633] z-40">
+<div class="px-6 py-8 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-primary/30">
+<img alt="User Profile" data-alt="close-up profile avatar of a tech auditor with futuristic glasses and blue accent lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-N5Nm484sd8ewu0on6xAxZt24y2uqElpYFh77MRZm2dyFIXvWFGgwmT1J7GLCtYWWCDhsiWxq9MJQx16aTBl1lIIwc5PYXtqnhBKBcevB7yIVFl64kSVONTuYWtOAWei-7xymfCHg_jXHv52_GM50MoVpkElkyM-qBx8bhh3Rp7FZ_4UVezZN3Hnqkj-TIzgQaPT-p2-_7Q2F-Ou4x4-c9gKd7VgFxXC6gpSNNw5xUQymNa9CTfG00f4-ztxa1QDfUX4WstlvSJo"/>
+</div>
+<div>
+<p class="font-headline uppercase tracking-widest text-[10px] text-primary">Lead Auditor</p>
+<p class="font-body text-xs text-on-surface-variant">Verified Node</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2 mt-4 font-['Space_Grotesk'] uppercase tracking-widest text-xs">
+<a class="text-[#9ba8ff]/50 flex items-center gap-3 px-6 py-4 hover:bg-[#9ba8ff]/5 hover:text-[#9ba8ff] hover:translate-x-2 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Overview
+                </a>
+<a class="text-[#e966ff] bg-[#e966ff]/10 border-r-4 border-[#e966ff] flex items-center gap-3 px-6 py-4 hover:translate-x-2 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="security">security</span> Shield Status
+                </a>
+<a class="text-[#9ba8ff]/50 flex items-center gap-3 px-6 py-4 hover:bg-[#9ba8ff]/5 hover:text-[#9ba8ff] hover:translate-x-2 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span> Threat Map
+                </a>
+<a class="text-[#9ba8ff]/50 flex items-center gap-3 px-6 py-4 hover:bg-[#9ba8ff]/5 hover:text-[#9ba8ff] hover:translate-x-2 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span> Settings
+                </a>
+</nav>
+<div class="p-6">
+<button class="w-full py-3 rounded-xl border border-primary/40 text-primary font-headline uppercase tracking-widest text-xs hover:bg-primary/10 transition-colors">
+                    Run Scan
+                </button>
+</div>
+<div class="p-6 mt-auto border-t border-white/5 space-y-2 font-['Space_Grotesk'] uppercase tracking-widest text-[10px]">
+<a class="text-[#9ba8ff]/50 flex items-center gap-3 py-2 hover:text-[#9ba8ff] transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span> Support
+                </a>
+<a class="text-[#9ba8ff]/50 flex items-center gap-3 py-2 hover:text-[#9ba8ff] transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="code">code</span> API Docs
+                </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 flex-1 p-8 overflow-y-auto">
+<div class="max-w-6xl mx-auto space-y-12">
+<!-- Hero Header -->
+<header class="flex flex-col gap-2">
+<h1 class="text-4xl md:text-5xl font-headline font-bold text-on-surface tracking-tighter">
+                        Transaction <span class="bg-gradient-to-r from-tertiary to-secondary bg-clip-text text-transparent italic">Simulator</span>
+</h1>
+<p class="text-on-surface-variant font-body max-w-xl">
+                        Stress test our fraud detection engine by simulating high-risk parameters. 
+                        Live results are powered by the Shield-AI Neural Engine.
+                    </p>
+</header>
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+<!-- Left: Form Input -->
+<section class="xl:col-span-7 glass-panel rounded-xl p-8 shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl -z-10"></div>
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-secondary" data-icon="tune">tune</span>
+<h2 class="text-xl font-headline font-semibold">Parameters</h2>
+</div>
+<form class="space-y-8" id="sim-form">
+<!-- Amount Slider -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<label class="font-headline text-xs uppercase tracking-widest text-primary">Transaction Amount</label>
+<div class="bg-surface-container-highest px-4 py-2 rounded-lg border-b-2 border-primary text-secondary font-headline font-bold">
+                                        $ <input class="bg-transparent border-none focus:ring-0 w-20 text-right p-0" type="number" value="1250"/>
+</div>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-full appearance-none cursor-pointer" max="10000" min="0" step="100" type="range"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Location Dropdown -->
+<div class="space-y-4">
+<label class="font-headline text-xs uppercase tracking-widest text-primary">Origin Location</label>
+<div class="relative group">
+<select class="w-full bg-surface-container-highest border-none rounded-xl py-4 px-5 appearance-none focus:ring-2 focus:ring-secondary transition-all font-body text-sm">
+<option>India</option>
+<option selected="">USA</option>
+<option>UK</option>
+<option>Russia</option>
+<option>Nigeria</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-primary" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Device Type -->
+<div class="space-y-4">
+<label class="font-headline text-xs uppercase tracking-widest text-primary">Device Signature</label>
+<div class="flex gap-2">
+<button class="flex-1 py-3 bg-secondary-container/20 border border-secondary text-secondary rounded-xl font-headline text-[10px] uppercase tracking-widest flex flex-col items-center gap-1 shadow-[0_0_15px_rgba(233,102,255,0.2)]" type="button">
+<span class="material-symbols-outlined text-base" data-icon="smartphone">smartphone</span> Mobile
+                                        </button>
+<button class="flex-1 py-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface-variant rounded-xl font-headline text-[10px] uppercase tracking-widest flex flex-col items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-base" data-icon="laptop">laptop</span> Laptop
+                                        </button>
+<button class="flex-1 py-3 bg-surface-container-highest hover:bg-surface-bright text-on-surface-variant rounded-xl font-headline text-[10px] uppercase tracking-widest flex flex-col items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-base" data-icon="desktop_windows">desktop_windows</span> Desktop
+                                        </button>
+</div>
+</div>
+</div>
+<!-- Request Count Slider -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<label class="font-headline text-xs uppercase tracking-widest text-primary">Request Frequency (Last 1hr)</label>
+<span class="text-tertiary font-headline font-bold">42 Requests</span>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-full appearance-none cursor-pointer" max="200" min="1" type="range" value="42"/>
+</div>
+<!-- IP Address with Generate -->
+<div class="space-y-4">
+<label class="font-headline text-xs uppercase tracking-widest text-primary">Source IP Address</label>
+<div class="flex gap-4">
+<input class="flex-1 bg-surface-container-highest border-none rounded-xl py-4 px-5 focus:ring-2 focus:ring-primary transition-all font-body text-sm font-mono tracking-widest" placeholder="0.0.0.0" type="text" value="192.168.1.1"/>
+<button class="bg-surface-variant px-6 rounded-xl hover:bg-surface-bright text-primary transition-colors flex items-center gap-2 group" type="button">
+<span class="material-symbols-outlined group-active:rotate-180 transition-transform" data-icon="refresh">refresh</span>
+<span class="font-headline text-xs font-bold uppercase tracking-widest hidden sm:inline">Generate</span>
+</button>
+</div>
+</div>
+<button class="w-full py-5 rounded-xl bg-gradient-to-r from-primary-dim to-secondary-dim text-on-primary-fixed font-headline font-extrabold text-lg uppercase tracking-[0.2em] shadow-[0_10px_30px_rgba(155,168,255,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all relative overflow-hidden group" type="submit">
+<span class="relative z-10">Run Fraud Check</span>
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+</button>
+</form>
+</section>
+
+<!-- Right: Live Result -->
+<section class="xl:col-span-5 space-y-8">
+<div class="glass-panel rounded-xl p-1 relative border-none overflow-hidden h-full flex flex-col">
+<!-- Glowing animated-style border -->
+<div class="absolute inset-0 p-[2px] bg-gradient-to-br from-error to-secondary opacity-80 -z-10 animate-pulse"></div>
+<div class="bg-surface-container-low rounded-xl p-8 flex-1 flex flex-col items-center justify-center text-center relative overflow-hidden">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-error/20 blur-[80px]"></div>
+<div class="flex flex-col items-center gap-6 z-10">
+<h2 class="font-headline text-xs uppercase tracking-widest text-on-surface-variant">Live Result</h2>
+<!-- Score Gauge Mockup -->
+<div class="relative w-48 h-48 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle cx="96" cy="96" fill="none" r="88" stroke="rgba(255,255,255,0.05)" stroke-width="12"></circle>
+<circle class="drop-shadow-[0_0_10px_rgba(255,110,132,0.5)]" cx="96" cy="96" fill="none" r="88" stroke="url(#gradient-score)" stroke-dasharray="552" stroke-dashoffset="110" stroke-linecap="round" stroke-width="16"></circle>
+<defs>
+<lineargradient id="gradient-score" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#ff6e84"></stop>
+<stop offset="100%" stop-color="#e966ff"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-6xl font-headline font-bold text-on-surface" id="live-risk-score">--</span>
+<span class="text-[10px] font-headline uppercase tracking-widest text-error-dim">Risk Score</span>
+</div>
+</div>
+<!-- Decision Badge -->
+<div id="live-decision-badge" class="bg-surface-container border border-outline px-8 py-4 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.3)]">
+<span id="live-decision-text" class="text-2xl font-headline font-black text-on-surface-variant italic tracking-widest">WAITING...</span>
+</div>
+<!-- Reasoning -->
+<div class="max-w-xs space-y-4" id="live-reasons-container">
+<p class="font-body text-sm text-on-surface/80 leading-relaxed">
+    Ready for structural AI scan...
+</p>
+<div class="flex flex-wrap justify-center gap-2" id="live-reasons-badges">
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Analysis Cards -->
+<div class="grid grid-cols-3 gap-4">
+<div class="glass-panel p-4 rounded-xl flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-lg" data-icon="bolt">bolt</span>
+<span class="font-headline text-[10px] uppercase text-on-surface-variant">Latency</span>
+<span class="font-headline font-bold text-tertiary">12ms</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col items-center gap-2 border-primary/20">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="hub">hub</span>
+<span class="font-headline text-[10px] uppercase text-on-surface-variant">Confidence</span>
+<span class="font-headline font-bold text-primary">99.4%</span>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="memory">memory</span>
+<span class="font-headline text-[10px] uppercase text-on-surface-variant">Process</span>
+<span class="font-headline font-bold text-secondary">A-12</span>
+</div>
+</div>
+</section>
+</div>
+
+<!-- Recent Results Section -->
+<section class="space-y-6">
+<div class="flex justify-between items-center px-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="history">history</span>
+<h2 class="text-xl font-headline font-semibold">Simulation Log</h2>
+</div>
+<button class="text-xs font-headline uppercase tracking-widest text-primary hover:text-secondary transition-colors" onclick="document.getElementById('sim-history-tbody').innerHTML = ''">Clear All</button>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden overflow-x-auto">
+<table class="w-full text-left font-body text-sm whitespace-nowrap">
+<thead class="bg-surface-container font-headline uppercase tracking-widest text-[10px] text-primary">
+<tr>
+<th class="px-6 py-4">Timestamp</th>
+<th class="px-6 py-4">Transaction ID</th>
+<th class="px-6 py-4">Amount</th>
+<th class="px-6 py-4">Location</th>
+<th class="px-6 py-4 min-w-[150px]">Risk</th>
+<th class="px-6 py-4">Decision</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5" id="sim-history-tbody">
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="flex flex-col items-center justify-center gap-4 mt-auto w-full py-8 border-t border-white/5 font-['Inter'] text-sm tracking-tighter">
+<p class="text-[#9ba8ff]/40">I-Fraud Shield | AI-Powered Transaction Fraud Detection © 2026</p>
+<div class="flex gap-6">
+<a class="text-[#9ba8ff]/40 hover:text-[#81ecff] transition-colors" href="#">Privacy</a>
+<a class="text-[#9ba8ff]/40 hover:text-[#81ecff] transition-colors" href="#">Terms</a>
+<a class="text-[#9ba8ff]/40 hover:text-[#81ecff] transition-colors" href="#">Github</a>
+</div>
+</footer>
+</div>
+</main>
+</div>
+<!-- OTP Modal -->
+<div id="otp-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity">
+    <div class="glass-panel rounded-xl p-8 max-w-sm w-full mx-4 relative overflow-hidden transform transition-all shadow-[0_0_40px_rgba(234,179,8,0.3)]">
+        <div class="absolute top-0 left-0 w-full h-1 bg-yellow-400"></div>
+        <div class="flex flex-col items-center text-center gap-4">
+            <div class="w-16 h-16 rounded-full bg-yellow-400/20 flex items-center justify-center border border-yellow-400/50">
+                <span class="material-symbols-outlined text-yellow-400 text-3xl" data-icon="lock_clock">lock_clock</span>
+            </div>
+            <h3 class="font-headline font-bold text-xl text-on-surface">Security Verification</h3>
+            <p class="font-body text-sm text-on-surface-variant">The Neural Engine flagged this transaction. Please enter the OTP sent to your registered device.</p>
+            <p id="otp-hint" class="text-xs text-yellow-400/80 font-mono mt-1 hidden"></p>
+            
+            <form id="otp-form" class="w-full mt-4 space-y-4">
+                <div class="flex gap-2 justify-center">
+                    <input type="text" maxlength="1" class="otp-input w-12 h-14 bg-surface-container-highest border border-outline rounded-lg text-center font-headline text-2xl focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-white placeholder-gray-500">
+                    <input type="text" maxlength="1" class="otp-input w-12 h-14 bg-surface-container-highest border border-outline rounded-lg text-center font-headline text-2xl focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-white placeholder-gray-500">
+                    <input type="text" maxlength="1" class="otp-input w-12 h-14 bg-surface-container-highest border border-outline rounded-lg text-center font-headline text-2xl focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-white placeholder-gray-500">
+                    <input type="text" maxlength="1" class="otp-input w-12 h-14 bg-surface-container-highest border border-outline rounded-lg text-center font-headline text-2xl focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400 text-white placeholder-gray-500">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="button" id="otp-cancel" class="flex-1 py-3 bg-surface-variant text-on-surface hover:bg-surface-bright rounded-lg font-headline font-semibold transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-yellow-400 text-black hover:bg-yellow-300 rounded-lg font-headline font-bold shadow-[0_0_15px_rgba(234,179,8,0.4)] transition-all">Verify</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="module" src="/src/main.js"></script>
+</body></html>

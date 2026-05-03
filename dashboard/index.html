@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>I-Fraud Shield | Monitoring Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#8999ff",
+                    "surface-dim": "#16052a",
+                    "primary-fixed-dim": "#778aff",
+                    "on-tertiary-container": "#004d57",
+                    "on-primary-container": "#001470",
+                    "on-tertiary-fixed": "#003840",
+                    "surface": "#16052a",
+                    "error-container": "#a70138",
+                    "secondary-container": "#a100bd",
+                    "background": "#16052a",
+                    "surface-container": "#240e3b",
+                    "surface-bright": "#391e58",
+                    "error": "#ff6e84",
+                    "tertiary-dim": "#00d4ec",
+                    "on-primary-fixed-variant": "#001a88",
+                    "inverse-primary": "#2949ef",
+                    "secondary-fixed-dim": "#f7a8ff",
+                    "surface-container-high": "#2b1345",
+                    "surface-tint": "#9ba8ff",
+                    "primary": "#9ba8ff",
+                    "surface-container-lowest": "#000000",
+                    "tertiary": "#81ecff",
+                    "on-primary-fixed": "#000000",
+                    "tertiary-fixed": "#00e3fd",
+                    "surface-container-low": "#1c0832",
+                    "surface-variant": "#32194e",
+                    "on-tertiary-fixed-variant": "#005762",
+                    "on-secondary-container": "#fff5fa",
+                    "on-primary": "#001c8e",
+                    "primary-dim": "#4963ff",
+                    "outline": "#826d98",
+                    "on-secondary-fixed-variant": "#8b00a3",
+                    "secondary": "#e966ff",
+                    "on-secondary-fixed": "#5d006e",
+                    "on-error-container": "#ffb2b9",
+                    "error-dim": "#d73357",
+                    "secondary-dim": "#c500e6",
+                    "tertiary-fixed-dim": "#00d4ec",
+                    "tertiary-container": "#00e3fd",
+                    "on-secondary": "#3c0048",
+                    "primary-container": "#8999ff",
+                    "outline-variant": "#524067",
+                    "on-error": "#490013",
+                    "secondary-fixed": "#fbbdff",
+                    "inverse-surface": "#fff7ff",
+                    "on-surface": "#f1dfff",
+                    "on-tertiary": "#005762",
+                    "inverse-on-surface": "#604d75",
+                    "on-background": "#f1dfff",
+                    "on-surface-variant": "#b9a2d0",
+                    "surface-container-highest": "#32194e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter"],
+                    "label": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(50, 25, 78, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(155, 168, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background: radial-gradient(circle at top left, #240e3b, #16052a 50%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface">
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-20 bg-[#16052a]/60 backdrop-blur-xl border-b border-[#9ba8ff]/20 shadow-[0_0_15px_rgba(155,168,255,0.2)]">
+<div class="text-2xl font-bold bg-gradient-to-r from-[#9ba8ff] to-[#e966ff] bg-clip-text text-transparent font-['Space_Grotesk'] tracking-tight">I-Fraud Shield</div>
+<div class="hidden md:flex gap-8 items-center">
+<a href="/" class="text-[#9ba8ff]/70 font-['Space_Grotesk'] tracking-tight hover:text-[#e966ff] transition-colors duration-300 hover:scale-105 active:scale-95 transition-transform">Home</a>
+<a data-target="overview" class="top-tab text-[#e966ff] border-b-2 border-[#e966ff] pb-1 font-['Space_Grotesk'] tracking-tight hover:scale-105 active:scale-95 transition-transform cursor-pointer">Dashboard</a>
+<a data-target="analytics" class="top-tab text-[#9ba8ff]/70 font-['Space_Grotesk'] tracking-tight hover:text-[#e966ff] transition-colors duration-300 hover:scale-105 active:scale-95 transition-transform cursor-pointer">Analytics</a>
+<a data-target="history" class="top-tab text-[#9ba8ff]/70 font-['Space_Grotesk'] tracking-tight hover:text-[#e966ff] transition-colors duration-300 hover:scale-105 active:scale-95 transition-transform cursor-pointer">History</a>
+</div>
+<button id="wallet-btn" class="bg-gradient-to-r from-primary-dim to-secondary-dim text-on-primary-fixed px-6 py-2 rounded-xl font-bold font-headline hover:scale-105 active:scale-95 transition-transform shadow-[0_0_20px_rgba(155,168,255,0.3)]">
+            Connect Wallet
+        </button>
+</nav>
+<aside class="hidden lg:flex flex-col h-full border-r border-white/5 bg-[#16052a] h-screen w-64 fixed left-0 top-0 pt-24 bg-gradient-to-b from-[#16052a] to-[#1a0633] shadow-2xl shadow-black z-40">
+<div class="px-6 mb-8 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center border border-secondary">
+<span class="material-symbols-outlined text-white">person</span>
+</div>
+<div>
+<p class="font-headline uppercase tracking-widest text-[10px] text-[#9ba8ff]">Lead Auditor</p>
+<p class="text-xs text-[#9ba8ff]/50">Verified Node</p>
+</div>
+</div>
+<div class="flex-1 space-y-1">
+<a data-target="overview" class="sidebar-tab text-[#e966ff] bg-[#e966ff]/10 border-r-4 border-[#e966ff] flex items-center gap-3 px-6 py-4 font-headline uppercase tracking-widest text-xs hover:translate-x-2 transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span> Overview
+            </a>
+<a data-target="shield-status" class="sidebar-tab text-[#9ba8ff]/50 flex items-center gap-3 px-6 py-4 font-headline uppercase tracking-widest text-xs hover:bg-[#9ba8ff]/5 hover:text-[#9ba8ff] hover:translate-x-2 transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined">security</span> Shield Status
+            </a>
+<a data-target="threat-map" class="sidebar-tab text-[#9ba8ff]/50 flex items-center gap-3 px-6 py-4 font-headline uppercase tracking-widest text-xs hover:bg-[#9ba8ff]/5 hover:text-[#9ba8ff] hover:translate-x-2 transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined">map</span> Threat Map
+            </a>
+<a data-target="settings" class="sidebar-tab text-[#9ba8ff]/50 flex items-center gap-3 px-6 py-4 font-headline uppercase tracking-widest text-xs hover:bg-[#9ba8ff]/5 hover:text-[#9ba8ff] hover:translate-x-2 transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</div>
+<div class="p-6 mb-4">
+<button class="w-full bg-primary/20 border border-primary text-primary py-3 rounded-xl font-headline uppercase tracking-widest text-[10px] hover:bg-primary hover:text-on-primary transition-all">
+                Run Scan
+            </button>
+</div>
+<div class="border-t border-white/5 py-4">
+<a class="text-[#9ba8ff]/40 flex items-center gap-3 px-6 py-2 text-xs font-headline uppercase tracking-widest hover:text-[#81ecff]" href="#">
+<span class="material-symbols-outlined text-sm">help</span> Support
+            </a>
+<a class="text-[#9ba8ff]/40 flex items-center gap-3 px-6 py-2 text-xs font-headline uppercase tracking-widest hover:text-[#81ecff]" href="#">
+<span class="material-symbols-outlined text-sm">code</span> API Docs
+            </a>
+</div>
+</aside>
+<main class="lg:pl-64 pt-24 pb-12 px-8 min-h-screen">
+<div id="tab-overview" class="tab-content max-w-7xl mx-auto space-y-10">
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface">Monitoring Dashboard</h1>
+<p class="text-on-surface-variant font-medium mt-1">Real-time fraud surveillance and anomaly detection system.</p>
+</div>
+<div class="flex gap-4">
+<div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3">
+<span class="text-xs font-headline tracking-widest uppercase text-outline">Network Health:</span>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(0,227,253,0.6)]"></div>
+<span class="text-tertiary text-xs font-bold">OPTIMAL</span>
+</div>
+</div>
+</div>
+</header>
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<div class="glass-panel p-6 rounded-xl hover:scale-105 transition-transform border-l-4 border-primary">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<span class="text-[10px] font-headline text-tertiary bg-tertiary/10 px-2 py-0.5 rounded-full">+12%</span>
+</div>
+<p class="mt-4 text-on-surface-variant text-sm font-headline tracking-widest uppercase">Total Transactions</p>
+<h3 class="text-3xl font-bold font-headline mt-1" id="dash-total">1,284,042</h3>
+</div>
+<div class="glass-panel p-6 rounded-xl hover:scale-105 transition-transform border-l-4 border-error">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-error/10 rounded-lg">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">gpp_maybe</span>
+</div>
+<span class="text-[10px] font-headline text-error bg-error/10 px-2 py-0.5 rounded-full">-4%</span>
+</div>
+<p class="mt-4 text-on-surface-variant text-sm font-headline tracking-widest uppercase">Fraud Detected</p>
+<h3 class="text-3xl font-bold font-headline mt-1" id="dash-fraud">1,429</h3>
+</div>
+<div class="glass-panel p-6 rounded-xl hover:scale-105 transition-transform border-l-4 border-tertiary">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-tertiary/10 rounded-lg">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<span class="text-[10px] font-headline text-tertiary bg-tertiary/10 px-2 py-0.5 rounded-full">+98%</span>
+</div>
+<p class="mt-4 text-on-surface-variant text-sm font-headline tracking-widest uppercase">Safe Transactions</p>
+<h3 class="text-3xl font-bold font-headline mt-1" id="dash-safe">1,282,613</h3>
+</div>
+<div class="glass-panel p-6 rounded-xl hover:scale-105 transition-transform border-l-4 border-secondary">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-secondary/10 rounded-lg">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+<span class="text-[10px] font-headline text-secondary bg-secondary/10 px-2 py-0.5 rounded-full">NEW</span>
+</div>
+<p class="mt-4 text-on-surface-variant text-sm font-headline tracking-widest uppercase">Alerts Triggered</p>
+<h3 class="text-3xl font-bold font-headline mt-1" id="dash-alerts">42</h3>
+</div>
+</section>
+<section class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<div class="xl:col-span-2 glass-panel p-8 rounded-xl min-h-[400px] relative overflow-hidden">
+<h4 class="font-headline font-bold text-xl tracking-tight mb-8">Transactions Over Time</h4>
+<div id="overview-bar-chart" class="w-full h-[280px] flex items-end justify-between gap-2 px-2"></div>
+<div id="overview-bar-labels" class="flex justify-between mt-4 text-[10px] font-headline uppercase tracking-widest text-outline"></div>
+<div class="glass-panel p-8 rounded-xl flex flex-col justify-between">
+<h4 class="font-headline font-bold text-xl tracking-tight mb-6">Fraud vs Safe</h4>
+<div class="relative w-48 h-48 mx-auto">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#8999ff20" stroke-width="4"></circle>
+<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#81ecff" stroke-dasharray="85 15" stroke-dashoffset="0" stroke-width="4"></circle>
+<circle class="drop-shadow-[0_0_5px_rgba(255,110,132,0.6)]" cx="18" cy="18" fill="transparent" r="15.915" stroke="#ff6e84" stroke-dasharray="15 85" stroke-dashoffset="-85" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold font-headline">99.8%</span>
+<span class="text-[10px] font-headline uppercase tracking-widest text-outline">Accuracy</span>
+</div>
+</div>
+<div class="mt-8 space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="text-sm font-headline tracking-widest uppercase text-on-surface-variant">Safe Transact.</span>
+</div>
+<span class="text-sm font-bold">1.2M</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<span class="text-sm font-headline tracking-widest uppercase text-on-surface-variant">Fraud Blocked</span>
+</div>
+<span class="text-sm font-bold text-error">1.4K</span>
+</div>
+</div>
+</div>
+</section>
+<section class="glass-panel rounded-xl overflow-hidden">
+<div class="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<h4 class="font-headline font-bold text-xl tracking-tight">Recent Transactions Monitoring</h4>
+<div class="flex flex-wrap items-center gap-4">
+<div class="flex items-center gap-2 bg-surface-container px-4 py-2 rounded-xl">
+<span class="material-symbols-outlined text-primary text-sm">filter_list</span>
+<select id="dashboard-tx-filter" class="bg-transparent border-none text-xs font-headline uppercase tracking-widest focus:ring-0 text-on-surface p-0 cursor-pointer">
+<option value="ALL">All Results</option>
+<option value="BLOCKED">Blocked</option>
+<option value="FLAGGED">Flagged</option>
+<option value="APPROVED">Approved</option>
+</select>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead>
+<tr class="bg-surface-container-high/50 text-left">
+<th class="px-6 py-4 font-headline uppercase tracking-widest text-[10px] text-outline">Timestamp</th>
+<th class="px-6 py-4 font-headline uppercase tracking-widest text-[10px] text-outline">Transaction ID</th>
+<th class="px-6 py-4 font-headline uppercase tracking-widest text-[10px] text-outline">Amount</th>
+<th class="px-6 py-4 font-headline uppercase tracking-widest text-[10px] text-outline">Location</th>
+<th class="px-6 py-4 font-headline uppercase tracking-widest text-[10px] text-outline">Risk</th>
+<th class="px-6 py-4 font-headline uppercase tracking-widest text-[10px] text-outline">Decision</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5" id="dash-history-tbody">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-5 text-sm font-mono text-primary">#TRX-990231</td>
+<td class="px-8 py-5 text-sm font-bold">$12,400.00</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">public</span> London, UK
+                                    </div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="flex-1 h-1.5 bg-surface-container rounded-full max-w-[100px] overflow-hidden">
+<div class="h-full bg-error w-[82%] shadow-[0_0_8px_rgba(255,110,132,0.4)]"></div>
+</div>
+<span class="text-xs font-bold text-error">82%</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<span class="px-3 py-1 bg-error-container/20 text-error border border-error/30 rounded-lg text-[10px] font-headline uppercase tracking-widest font-bold">Blocked</span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-5 text-sm font-mono text-primary">#TRX-990232</td>
+<td class="px-8 py-5 text-sm font-bold">$42.10</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">public</span> Tokyo, JP
+                                    </div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="flex-1 h-1.5 bg-surface-container rounded-full max-w-[100px] overflow-hidden">
+<div class="h-full bg-tertiary w-[04%]"></div>
+</div>
+<span class="text-xs font-bold text-tertiary">04%</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<span class="px-3 py-1 bg-tertiary-container/10 text-tertiary border border-tertiary/30 rounded-lg text-[10px] font-headline uppercase tracking-widest font-bold">Approved</span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-5 text-sm font-mono text-primary">#TRX-990233</td>
+<td class="px-8 py-5 text-sm font-bold">$1,205.50</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">public</span> Berlin, DE
+                                    </div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="flex-1 h-1.5 bg-surface-container rounded-full max-w-[100px] overflow-hidden">
+<div class="h-full bg-secondary w-[45%]"></div>
+</div>
+<span class="text-xs font-bold text-secondary">45%</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<span class="px-3 py-1 bg-secondary-container/10 text-secondary border border-secondary/30 rounded-lg text-[10px] font-headline uppercase tracking-widest font-bold">Flagged</span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-8 py-5 text-sm font-mono text-primary">#TRX-990234</td>
+<td class="px-8 py-5 text-sm font-bold">$34,000.00</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">public</span> New York, US
+                                    </div>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="flex-1 h-1.5 bg-surface-container rounded-full max-w-[100px] overflow-hidden">
+<div class="h-full bg-error w-[91%] shadow-[0_0_8px_rgba(255,110,132,0.4)]"></div>
+</div>
+<span class="text-xs font-bold text-error">91%</span>
+</div>
+</td>
+<td class="px-8 py-5 text-right">
+<span class="px-3 py-1 bg-error-container/20 text-error border border-error/30 rounded-lg text-[10px] font-headline uppercase tracking-widest font-bold">Blocked</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-surface-container-low flex justify-center border-t border-white/5">
+<button class="text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-primary hover:text-secondary transition-colors">View All Transaction History</button>
+</div>
+</section>
+</section>
+</div>
+
+<!-- Analytics Tab -->
+<div id="tab-analytics" class="tab-content hidden max-w-7xl mx-auto space-y-10 animate-fade-in">
+<header>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface">Analytics</h2>
+<p class="text-on-surface-variant mt-2">Live neural network classification patterns and block volumes.</p>
+</header>
+<div class="glass-panel p-8 rounded-xl h-[500px] relative w-full">
+<canvas id="analytics-chart-canvas"></canvas>
+</div>
+</div>
+
+<!-- History Tab -->
+<div id="tab-history" class="tab-content hidden max-w-7xl mx-auto space-y-10 animate-fade-in">
+<header>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface">History</h2>
+<p class="text-on-surface-variant mt-2">Logs of all past simulations and scans.</p>
+</header>
+<div class="glass-panel rounded-xl overflow-hidden">
+<table class="w-full text-left font-body text-sm">
+<thead class="bg-surface-container font-headline uppercase tracking-widest text-[10px] text-primary">
+<tr>
+<th class="px-6 py-4">Timestamp</th>
+<th class="px-6 py-4">Transaction ID</th>
+<th class="px-6 py-4">Amount</th>
+<th class="px-6 py-4">Location</th>
+<th class="px-6 py-4">Risk</th>
+<th class="px-6 py-4">Decision</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5" id="full-history-tbody">
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- Shield Status Tab -->
+<div id="tab-shield-status" class="tab-content hidden max-w-7xl mx-auto space-y-10 animate-fade-in">
+<header>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface">Shield Status</h2>
+<p class="text-on-surface-variant mt-2">Active security protocols and module health.</p>
+</header>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="glass-panel p-8 rounded-xl border-l-4 border-tertiary shadow-[0_0_30px_rgba(129,236,255,0.1)]">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-3 h-3 rounded-full bg-tertiary animate-ping absolute"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary relative z-10"></div>
+<h3 class="text-2xl font-bold font-headline text-tertiary">Neural Link Stable</h3>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between bg-surface-container p-4 rounded-xl font-body text-sm"><span>Algorithm Compute</span><span id="shield-stat-compute" class="text-tertiary font-bold tracking-widest text-[10px] uppercase font-headline">24% Load</span></div>
+<div class="flex items-center justify-between bg-surface-container p-4 rounded-xl font-body text-sm"><span>Node Latency</span><span id="shield-stat-latency" class="text-tertiary font-bold tracking-widest text-[10px] uppercase font-headline">12ms</span></div>
+<div class="flex items-center justify-between bg-surface-container p-4 rounded-xl font-body text-sm"><span>Verification Queries</span><span id="shield-stat-queries" class="text-tertiary font-bold tracking-widest text-[10px] uppercase font-headline">142/sec</span></div>
+</div>
+</div>
+
+<div class="glass-panel p-8 rounded-xl border-l-4 border-primary">
+<h3 class="text-xl font-bold font-headline mb-6 text-primary">Core Modules</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between bg-surface-container p-4 rounded-xl font-body text-sm"><span>Behavioral Analytics</span><span class="text-primary font-bold tracking-widest text-[10px] uppercase font-headline">Active</span></div>
+<div class="flex items-center justify-between bg-surface-container p-4 rounded-xl font-body text-sm"><span>IP verification</span><span class="text-primary font-bold tracking-widest text-[10px] uppercase font-headline">Active</span></div>
+<div class="flex items-center justify-between bg-surface-container p-4 rounded-xl font-body text-sm"><span>DDoS Shield</span><span class="text-primary font-bold tracking-widest text-[10px] uppercase font-headline">Monitoring</span></div>
+</div>
+</div>
+</div>
+
+</div>
+
+<!-- Threat Map Tab -->
+<div id="tab-threat-map" class="tab-content hidden max-w-7xl mx-auto space-y-10 animate-fade-in">
+<header>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface">Global Threat Map</h2>
+<p class="text-on-surface-variant mt-2">Live visualization of detected anomalies worldwide.</p>
+</header>
+<div class="glass-panel h-[500px] rounded-xl flex items-center justify-center relative overflow-hidden bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg')] bg-center bg-no-repeat bg-cover opacity-80">
+<div class="absolute inset-0 bg-[#16052a]/50"></div>
+<span class="z-10 bg-surface/80 px-6 py-3 rounded-full text-primary font-headline tracking-widest text-[10px] border border-primary/30 uppercase">Connect Pro API to view Earth Module</span>
+</div>
+</div>
+
+<!-- Settings Tab -->
+<div id="tab-settings" class="tab-content hidden max-w-7xl mx-auto space-y-10 animate-fade-in">
+<header>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface">Settings</h2>
+<p class="text-on-surface-variant mt-2">Configure detection rules and notifications.</p>
+</header>
+<div class="glass-panel p-8 rounded-xl space-y-8">
+<div>
+<h4 class="font-headline mb-4 uppercase tracking-widest text-primary text-[10px]">Security Thresholds</h4>
+<label class="block mb-2 text-on-surface-variant text-xs font-headline uppercase tracking-widest">Strictness Level <span id="settings-strictness-val" class="text-secondary ml-2 font-bold">85</span></label>
+<input id="settings-strictness-slider" type="range" class="w-full accent-secondary bg-surface-container h-2 rounded-lg appearance-none cursor-pointer" min="0" max="100" value="85"/>
+</div>
+<div>
+<h4 class="font-headline mb-4 uppercase tracking-widest text-primary text-[10px]">Notifications</h4>
+<label class="flex items-center gap-3 cursor-pointer"><input id="settings-bulk-toggle" type="checkbox" checked class="form-checkbox bg-surface-container border-outline text-secondary focus:ring-secondary rounded"/> <span class="text-xs font-headline tracking-widest uppercase">Alert on suspicious bulk transactions</span></label>
+</div>
+<div class="flex items-center gap-4">
+<button id="settings-save-btn" class="bg-primary text-on-primary-fixed px-8 py-3 rounded-xl font-headline font-bold text-xs uppercase tracking-widest hover:bg-primary-fixed transition-colors">Save Changes</button>
+<span id="settings-save-msg" class="text-tertiary font-headline uppercase tracking-widest text-[10px] font-bold opacity-0 transition-opacity">Saved Engine Protocol!</span>
+</div>
+</div>
+</div>
+
+</main>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sideTabs = document.querySelectorAll('.sidebar-tab');
+        const topTabs = document.querySelectorAll('.top-tab');
+        const contents = document.querySelectorAll('.tab-content');
+
+        const switchTab = (targetId) => {
+            contents.forEach(c => c.classList.add('hidden'));
+            
+            sideTabs.forEach(t => {
+                t.classList.remove('text-[#e966ff]', 'bg-[#e966ff]/10', 'border-r-4', 'border-[#e966ff]');
+                t.classList.add('text-[#9ba8ff]/50');
+            });
+            
+            topTabs.forEach(t => {
+                t.classList.remove('text-[#e966ff]', 'border-b-2', 'border-[#e966ff]');
+                t.classList.add('text-[#9ba8ff]/70');
+            });
+
+            const targetContent = document.getElementById('tab-' + targetId);
+            if(targetContent) targetContent.classList.remove('hidden');
+
+            const activeSide = document.querySelector(`.sidebar-tab[data-target="${targetId}"]`);
+            if(activeSide) {
+                activeSide.classList.remove('text-[#9ba8ff]/50');
+                activeSide.classList.add('text-[#e966ff]', 'bg-[#e966ff]/10', 'border-r-4', 'border-[#e966ff]');
+            }
+
+            const activeTop = document.querySelector(`.top-tab[data-target="${targetId}"]`);
+            if(activeTop) {
+                activeTop.classList.remove('text-[#9ba8ff]/70');
+                activeTop.classList.add('text-[#e966ff]', 'border-b-2', 'border-[#e966ff]');
+            }
+        };
+
+        sideTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab(tab.getAttribute('data-target'));
+            });
+        });
+
+        topTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab(tab.getAttribute('data-target'));
+            });
+        });
+    });
+</script>
+<footer class="flex flex-col items-center justify-center gap-4 mt-auto w-full py-8 border-t border-white/5 bg-transparent">
+<div class="flex gap-8">
+<a class="text-[#9ba8ff]/40 font-['Inter'] text-sm tracking-tighter hover:text-[#81ecff] transition-colors opacity-80 hover:opacity-100" href="#">Privacy</a>
+<a class="text-[#9ba8ff]/40 font-['Inter'] text-sm tracking-tighter hover:text-[#81ecff] transition-colors opacity-80 hover:opacity-100" href="#">Terms</a>
+<a class="text-[#9ba8ff]/40 font-['Inter'] text-sm tracking-tighter hover:text-[#81ecff] transition-colors opacity-80 hover:opacity-100" href="#">Github</a>
+</div>
+<p class="text-[#9ba8ff]/40 font-['Inter'] text-sm tracking-tighter opacity-80">I-Fraud Shield | AI-Powered Transaction Fraud Detection © 2026</p>
+</footer>
+<script type="module" src="/src/main.js"></script>
+</body></html>
